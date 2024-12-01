@@ -22,9 +22,13 @@ window.addEventListener("load", function () {
       context.save();
       context.globalAlpha = 0.5;
       context.fill();
-      context.stroke();
       context.restore();
+      context.stroke();
+    }
 
+    update() {
+      this.collisionX = this.game.mouse.x;
+      this.collisionY = this.game.mouse.y;
     }
   }
 
@@ -35,18 +39,48 @@ window.addEventListener("load", function () {
       this.width = this.canvas.width;
       this.height = this.canvas.height;
       this.player = new Player(this);
+      this.mouse = {
+        x: this.width * 0.5,
+        y: this.height * 0.5,
+        pressed: false
+      };
+
+      addEventListener("", (event) => {
+        console.log("mouseup");
+      });
+
+
+      canvas.addEventListener("mousedown", (e) => {
+        this.mouse.x = e.offsetX;
+        this.mouse.y = e.offsetY;
+        this.mouse.pressed = true
+      });
+      canvas.addEventListener("mouseup", (e) => {
+        this.mouse.x = e.offsetX;
+        this.mouse.y = e.offsetY;
+        this.mouse.pressed = false
+      });
+      canvas.addEventListener("mousemove", (e) => {
+        this.mouse.x = e.offsetX;
+        this.mouse.y = e.offsetY;
+      });
+
     }
 
     render(context) {
       this.player.draw(context);
+      this.player.update();
     }
   }
 
   const game = new Game(canvas);
-  game.render(ctx);
 
 
   function animate() {
+    game.render(ctx);
+    requestAnimationFrame(animate);
   }
+
+  animate();
 
 });
